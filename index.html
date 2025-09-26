@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Suburban Moxie</title>
+  <meta name="description" content="Suburban Moxie — lifestyle, fitness, and community vibes. Explore more on my official site." />
+
+  <!-- Open Graph (for previews) -->
+  <meta property="og:title" content="Suburban Moxie" />
+  <meta property="og:description" content="Lifestyle • Fitness • Community" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://moxiestop.com/images/banner.jpg" />
+  <meta property="og:url" content="https://moxiestop.com/" />
+
+  <link rel="icon" href="https://moxiestop.com/images/avatar.jpg" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #0f0f12;
+      color: #f4f6f8;
+      display: grid;
+      place-items: center;
+      height: 100vh;
+    }
+    .wrap {
+      max-width: 600px;
+      padding: 24px;
+      text-align: center;
+      background: #15161a;
+      border-radius: 12px;
+    }
+    .avatar {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      margin-bottom: 16px;
+    }
+    h1 { margin: 0; font-size: 1.75rem; }
+    .tagline { color: #b8bec7; margin: 8px 0 20px; }
+    .btn {
+      display: inline-block;
+      padding: 14px 22px;
+      border-radius: 8px;
+      background: #f23c86;
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background .2s;
+    }
+    .btn:hover { background: #ff5aa0; }
+    footer { margin-top: 20px; font-size: 0.85rem; color: #b8bec7; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <img class="avatar" src="https://moxiestop.com/images/avatar.jpg" alt="Suburban Moxie profile" />
+    <h1>Suburban Moxie 💋</h1>
+    <p class="tagline">Lifestyle • Fitness • Community</p>
+
+    <!-- UTM tracking added here -->
+    <a class="btn" href="https://suburbanmoxxxie.com/?utm_source=tiktok&utm_medium=bio&utm_campaign=launch">
+      Click here to explore more
+    </a>
+
+    <footer>
+      © <span id="year"></span> Suburban Moxie. All rights reserved.
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
