@@ -29,10 +29,10 @@
     try { localStorage.setItem(LS_KEY, String(Date.now())); } catch (e) {}
   }
 
-  // Show after 8s or after scrolling halfway
+  // Show after 2s or after scrolling halfway
   const delayTimer = setTimeout(() => {
     if (shouldShow()) openSlide();
-  }, 8000);
+  }, 2000);
 
   function onScroll() {
     if (!shouldShow()) return window.removeEventListener('scroll', onScroll);
