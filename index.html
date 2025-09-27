@@ -131,7 +131,8 @@
     </div>
 
     <div class="cta">
-      <a class="btn" href="https://linktr.ee/suburbanmoxxxie?utm_source=suburbanmoxxxie&utm_medium=button&utm_campaign=launch" 
+      <a class="btn"
+         href="https://linktr.ee/suburbanmoxxxie?utm_source=suburbanmoxxxie&utm_medium=button&utm_campaign=launch"
          target="_blank" rel="noopener noreferrer nofollow">
         Click here to explore more
       </a>
@@ -149,6 +150,20 @@
   <script>
     // Current year in footer
     document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
+  <!-- TikTok-origin tracking: append utm_content=tiktok if coming via moxiestop redirect -->
+  <script>
+    (function () {
+      const btn = document.querySelector('.btn');
+      if (!btn) return;
+
+      const base = 'https://linktr.ee/suburbanmoxxxie?utm_source=suburbanmoxxxie&utm_medium=button&utm_campaign=launch';
+      const src = new URL(window.location.href).searchParams.get('src');
+
+      // Label TikTok-origin sessions (arrived via moxiestop) without changing your base UTMs
+      btn.href = (src === 'tt' || src === 'tiktok') ? (base + '&utm_content=tiktok') : base;
+    })();
   </script>
 
   <!-- EmailOctopus default popup -->
