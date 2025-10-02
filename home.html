@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Suburban Moxie | 18+</title>
+  <!-- Plausible Analytics -->
+  <script defer data-domain="YOURDOMAIN.com" src="https://plausible.io/js/script.js"></script>
+  <style>
+    body {
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:#0b0b0c; color:#f5f5f7; margin:0;
+    }
+    .wrap { max-width:680px; margin:0 auto; padding:24px; text-align:center; }
+    .card {
+      background:#141416; border:1px solid #2a2a2e;
+      border-radius:14px; padding:20px; margin:16px 0;
+    }
+    h1 { font-size:26px; margin:12px 0 4px }
+    p.sub { opacity:.8; margin:0 0 12px }
+    .btn {
+      display:block; text-align:center; padding:14px 16px;
+      border-radius:12px; border:1px solid #3a3a40;
+      text-decoration:none; color:#fff; font-weight:600; margin:10px 0;
+    }
+    .btn.primary { background:#4b7bf5; border-color:#4b7bf5 }
+    .btn.live { background:#26a269 }
+    .lock { font-size:12px; opacity:.7; margin-left:6px }
+    .disclaimer { font-size:12px; opacity:.75; margin-top:6px }
+    .footer { opacity:.6; font-size:12px; text-align:center; margin:24px 0 }
+    .profile-pic {
+      width:120px; height:120px; border-radius:50%; object-fit:cover;
+      border:2px solid #3a3a40; margin-bottom:12px;
+    }
+  </style>
+  <script>
+    // Carry UTM tags forward
+    function getParams(){
+      const p=new URLSearchParams(location.search);
+      return {
+        utm_source:p.get('utm_source')||'direct',
+        utm_medium:p.get('utm_medium')||'site',
+        utm_campaign:p.get('utm_campaign')||'default'
+      };
+    }
+    function withUTM(url,params){
+      const u=new URL(url);
+      if(!u.searchParams.get('utm_source')){
+        u.searchParams.set('utm_source',params.utm_source);
+        u.searchParams.set('utm_medium',params.utm_medium);
+        u.searchParams.set('utm_campaign',params.utm_campaign);
+      }
+      return u.toString();
+    }
+    document.addEventListener('DOMContentLoaded',()=>{
+      const params=getParams();
+      document.querySelectorAll('a[data-propagate="true"]').forEach(a=>{
+        a.href=withUTM(a.href,params);
+        a.addEventListener('click',()=>{ if(window.plausible) plausible('Outbound Link: '+a.dataset.name); });
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- Profile block -->
+    <div class="card">
+      <img src="../images/avatar.jpg" alt="Profile Picture" class="profile-pic" />
+      <h1>Suburban Moxie</h1>
+      <p class="sub">Exclusive 18+ Content & Live Streams</p>
+    </div>
+
+    <!-- Tier 1: Core funnels -->
+    <div class="card">
+      <a class="btn primary" data-name="OnlyFans" data-propagate="true"
+         href="https://onlyfans.com/YOUR_HANDLE">💙 OnlyFans — Subscribe</a>
+      <a class="btn live" data-name="Chaturbate" data-propagate="true"
+         href="https://chaturbate.com/YOUR_HANDLE">🔴 I’m Live on Chaturbate</a>
+      <a class="btn" data-name="ManyVids" data-propagate="true"
+         href="https://www.manyvids.com/Profile/YOUR_HANDLE/Store/">🛒 ManyVids — Clips</a>
+    </div>
+
+    <!-- Email capture -->
+    <div class="card">
+      <h2 style="margin:0 0 8px">Get updates</h2>
+      <script async src="https://eocampaign1.com/form/9f8b5136-9f7a-11f0-8b6d-b31dd542261e.js" data-form="9f8b5136-9f7a-11f0-8b6d-b31dd542261e"></script>
+      <p class="disclaimer">Double opt-in. Unsubscribe anytime.</p>
+    </div>
+
+    <!-- Tier 2: Discovery -->
+    <div class="card">
+      <a class="btn" data-name="Pornhub" data-propagate="true"
+         href="https://www.pornhub.com/model/YOUR_HANDLE">🔒 Free Samples — Pornhub<span class="lock"> (explicit)</span></a>
+      <a class="btn" data-name="RedGIFs" data-propagate="true"
+         href="https://www.redgifs.com/users/YOUR_HANDLE">🔒 Loops — RedGIFs<span class="lock"> (explicit)</span></a>
+    </div>
+
+    <div class="footer">© Suburban Moxie • All rights reserved</div>
+  </div>
+</body>
+</html>
