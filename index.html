@@ -1,179 +1,192 @@
 <!doctype html>
 <html lang="en">
-<script defer data-domain="suburbanmoxxxie.com" src="https://plausible.io/js/script.js"></script>
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Suburban Moxie</title>
-  <meta name="description" content="Suburban Moxie — lifestyle, fitness, and community vibes. Explore more on my official site." />
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="Suburban Moxie" />
-  <meta property="og:description" content="Lifestyle • Fitness • Community" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://suburbanmoxxxie.com/images/banner.jpg" />
-  <meta property="og:url" content="https://suburbanmoxxxie.com/" />
-
-  <link rel="icon" href="images/avatar.jpg" />
-
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Suburban Moxie | 18+</title>
+  <!-- Plausible Analytics -->
+  <script defer data-domain="YOURDOMAIN.com" src="https://plausible.io/js/script.js"></script>
   <style>
-    :root {
-      --bg: #0f0f12;
-      --card: #15161a;
-      --text: #f4f6f8;
-      --muted: #b8bec7;
-      --accent: #f23c86;
-      --accent-hover: #ff5aa0;
-      --ring: rgba(242, 60, 134, 0.4);
-    }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
     body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-      background: radial-gradient(1200px 800px at 80% -10%, #1c1d22, transparent), var(--bg);
-      color: var(--text);
-      display: grid;
-      place-items: center;
-      padding: 24px;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:#0b0b0c; color:#f5f5f7; margin:0;
     }
-    .wrap {
-      width: 100%;
-      max-width: 620px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)), var(--card);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 18px;
-      padding: 28px 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    .wrap { max-width:680px; margin:0 auto; padding:24px; text-align:center; }
+    .card {
+      background:#141416; border:1px solid #2a2a2e;
+      border-radius:14px; padding:20px; margin:16px 0;
     }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .avatar {
-      width: 64px; height: 64px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid rgba(255,255,255,0.15);
-    }
-    h1 {
-      font-size: 1.75rem;
-      line-height: 1.2;
-      margin: 0;
-      letter-spacing: 0.3px;
-    }
-    .tagline {
-      margin: 8px 0 0 0;
-      color: var(--muted);
-      font-size: 0.98rem;
-    }
-    .banner {
-      margin: 18px 0 8px;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-    .banner img { display: block; width: 100%; height: auto; }
-    .cta {
-      display: grid;
-      gap: 12px;
-      margin-top: 16px;
-    }
+    h1 { font-size:26px; margin:12px 0 4px }
+    p.sub { opacity:.8; margin:0 0 12px }
     .btn {
-      appearance: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 14px 18px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.10);
-      color: var(--text);
-      background: linear-gradient(180deg, rgba(242,60,134,0.12), rgba(242,60,134,0.05));
-      transition: transform .05s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
-      text-decoration: none;
-      font-weight: 600;
-      letter-spacing: .2px;
+      display:block; text-align:center; padding:14px 16px;
+      border-radius:12px; border:1px solid #3a3a40;
+      text-decoration:none; color:#fff; font-weight:600; margin:10px 0;
+      cursor:pointer;
     }
-    .btn:hover {
-      background: linear-gradient(180deg, rgba(242,60,134,0.18), rgba(242,60,134,0.1));
-      border-color: rgba(242,60,134,0.4);
-      box-shadow: 0 0 0 6px var(--ring);
+    .btn.primary { background:#4b7bf5; border-color:#4b7bf5 }
+    .btn.live { background:#26a269 }
+    .lock { font-size:12px; opacity:.7; margin-left:6px }
+    .disclaimer { font-size:12px; opacity:.75; margin-top:6px }
+    .footer { opacity:.6;font-size:12px;text-align:center;margin:24px 0 }
+    .footer a { color:#aaa; text-decoration:none; margin:0 6px; }
+    .profile-pic {
+      width:120px; height:120px; border-radius:50%; object-fit:cover;
+      border:2px solid #3a3a40; margin-bottom:12px;
     }
-    .btn:active { transform: translateY(1px); }
-    .subnote {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 0.9rem;
-      text-align: center;
+
+    /* --- Modal (flyout) --- */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,.6);
+      display: none; align-items: center; justify-content: center; z-index: 50;
     }
-    footer {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 0.85rem;
-      text-align: center;
+    .modal {
+      width: min(92%, 520px);
+      background: #15161a; border:1px solid rgba(255,255,255,.08);
+      border-radius: 16px; padding: 18px 18px 14px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.35);
+      text-align: left;
     }
+    .modal h3 { margin: 4px 0 6px; font-size: 18px; }
+    .modal p { margin: 0 0 12px; color: #b8bec7; line-height: 1.5; }
+    .modal .row { display:flex; gap:10px; margin-top:12px; }
+    .modal .xbtn {
+      flex:1; text-align:center; padding:12px 14px; border-radius:10px;
+      font-weight:600; border:1px solid #3a3a40; background:#1b1c21; color:#fff;
+      cursor:pointer;
+    }
+    .modal .xbtn.primary { background:#4b7bf5; border-color:#4b7bf5; }
+    .modal .xbtn.secondary { background:#202127; }
   </style>
+  <script>
+    // Carry UTM tags forward to outbound links
+    function getParams(){
+      const p=new URLSearchParams(location.search);
+      return {
+        utm_source:p.get('utm_source')||'direct',
+        utm_medium:p.get('utm_medium')||'site',
+        utm_campaign:p.get('utm_campaign')||'default'
+      };
+    }
+    function withUTM(url,params){
+      const u=new URL(url);
+      if(!u.searchParams.get('utm_source')){
+        u.searchParams.set('utm_source',params.utm_source);
+        u.searchParams.set('utm_medium',params.utm_medium);
+        u.searchParams.set('utm_campaign',params.utm_campaign);
+      }
+      return u.toString();
+    }
+
+    let pendingHref = null; // holds link awaiting confirmation
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      const params=getParams();
+
+      // Enhance outbound links
+      document.querySelectorAll('a[data-propagate="true"]').forEach(a=>{
+        a.href=withUTM(a.href,params);
+
+        // Attach click handler only if confirmation is required
+        if (a.dataset.confirm === 'true') {
+          a.addEventListener('click',(e)=>{
+            // Allow bypass with Cmd/Ctrl click or middle-click for new tab
+            if (e.metaKey || e.ctrlKey || e.button === 1) return;
+            e.preventDefault();
+            pendingHref = a.href;
+            showModal(a.dataset.name || 'External link');
+          });
+        } else {
+          // No confirm: still log Plausible event on click
+          a.addEventListener('click',()=>{ if(window.plausible) plausible('Outbound Link: '+(a.dataset.name||'Link')); });
+        }
+      });
+
+      // Modal buttons
+      const goBtn = document.getElementById('confirm-go');
+      const cancelBtn = document.getElementById('confirm-cancel');
+      const closeArea = document.getElementById('modal-backdrop');
+      goBtn.addEventListener('click',()=>{
+        if (pendingHref) {
+          if (window.plausible) plausible('Outbound Link: Confirmed');
+          window.location.href = pendingHref;
+          pendingHref = null;
+        }
+        hideModal();
+      });
+      cancelBtn.addEventListener('click',()=>{ pendingHref=null; hideModal(); });
+      // click backdrop to close (but not when clicking the dialog itself)
+      closeArea.addEventListener('click',(e)=>{
+        if (e.target === closeArea) { pendingHref=null; hideModal(); }
+      });
+      document.addEventListener('keydown',(e)=>{
+        if (e.key === 'Escape') { pendingHref=null; hideModal(); }
+      });
+    });
+
+    function showModal(name){
+      const title = document.getElementById('confirm-title');
+      const text  = document.getElementById('confirm-text');
+      title.textContent = 'Sensitive content';
+      text.textContent  = 'This link may lead to explicit 18+ material. Are you sure you want to continue?';
+      document.getElementById('modal-backdrop').style.display='flex';
+    }
+    function hideModal(){
+      document.getElementById('modal-backdrop').style.display='none';
+    }
+  </script>
 </head>
 <body>
-  <main class="wrap" role="main">
-    <div class="brand" aria-label="Brand">
-      <img class="avatar" src="images/avatar.jpg" alt="Suburban Moxie profile" />
-      <div>
-        <h1>Suburban Moxie 💋</h1>
-        <p class="tagline">Lifestyle • Fitness • Community</p>
+  <div class="wrap">
+
+    <!-- Profile block -->
+    <div class="card">
+      <img src="../images/avatar.jpg" alt="Profile Picture" class="profile-pic" />
+      <h1>Suburban Moxie</h1>
+      <p class="sub">Exclusive 18+ Content & Live Streams</p>
+    </div>
+
+    <!-- Tier 1: Core funnels (confirmation enabled) -->
+    <div class="card">
+      <a class="btn primary" data-name="OnlyFans" data-propagate="true" data-confirm="true"
+         href="https://onlyfans.com/YOUR_HANDLE">💙 OnlyFans — Subscribe</a>
+      <a class="btn live" data-name="Chaturbate" data-propagate="true" data-confirm="true"
+         href="https://chaturbate.com/YOUR_HANDLE">🔴 I’m Live on Chaturbate</a>
+      <a class="btn" data-name="ManyVids" data-propagate="true" data-confirm="true"
+         href="https://www.manyvids.com/Profile/YOUR_HANDLE/Store/">🛒 ManyVids — Clips</a>
+    </div>
+
+    <!-- Email capture (no confirmation) -->
+    <div class="card">
+      <h2 style="margin:0 0 8px">Get updates</h2>
+      <script async src="https://eocampaign1.com/form/9f8b5136-9f7a-11f0-8b6d-b31dd542261e.js" data-form="9f8b5136-9f7a-11f0-8b6d-b31dd542261e"></script>
+    </div>
+
+    <!-- Tier 2: Discovery (confirmation enabled) -->
+    <div class="card">
+      <a class="btn" data-name="Pornhub" data-propagate="true" data-confirm="true"
+         href="https://www.pornhub.com/model/YOUR_HANDLE">🔒 Free Samples — Pornhub<span class="lock"> (explicit)</span></a>
+      <a class="btn" data-name="RedGIFs" data-propagate="true" data-confirm="true"
+         href="https://www.redgifs.com/users/YOUR_HANDLE">🔒 Loops — RedGIFs<span class="lock"> (explicit)</span></a>
+    </div>
+
+    <!-- Footer with compliance links -->
+    <div class="footer">
+      © Suburban Moxie • All rights reserved <br/>
+      <a href="/safety">Report Safety Concern</a> | <a href="/privacy">Privacy Policy</a>
+    </div>
+  </div>
+
+  <!-- Modal (flyout) -->
+  <div class="modal-backdrop" id="modal-backdrop" aria-modal="true" role="dialog">
+    <div class="modal" role="document" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+      <h3 id="confirm-title">Sensitive content</h3>
+      <p id="confirm-text">This link may lead to explicit 18+ material. Are you sure you want to continue?</p>
+      <div class="row">
+        <button class="xbtn secondary" id="confirm-cancel" type="button">Cancel</button>
+        <button class="xbtn primary" id="confirm-go" type="button">Continue</button>
       </div>
     </div>
-
-    <div class="banner" aria-hidden="true">
-      <img src="images/banner.jpg" alt="Banner" />
-    </div>
-
-    <div class="cta">
-      <a class="btn"
-         href="https://linktr.ee/suburbanmoxxxie?utm_source=suburbanmoxxxie&utm_medium=button&utm_campaign=launch"
-         target="_blank" rel="noopener noreferrer nofollow">
-        Enter — 18+ only
-      </a>
-    </div>
-
-    <p class="subnote">
-      Looking for socials? Search: <strong>Suburban Moxie 💋</strong>
-    </p>
-
-    <p class="subnote">
-      18+ only. By subscribing you agree to receive emails.
-      <a href="/privacy.html" rel="nofollow">Privacy Policy</a>
-    </p>
-
-    <footer>
-      © <span id="year"></span> Suburban Moxie. All rights reserved.
-    </footer>
-  </main>
-
-  <script>
-    // Current year in footer
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
-
-  <!-- TikTok-origin tracking: append utm_content=tiktok if coming via moxiestop redirect -->
-  <script>
-    (function () {
-      const btn = document.querySelector('.btn');
-      if (!btn) return;
-
-      const base = 'https://linktr.ee/suburbanmoxxxie?utm_source=suburbanmoxxxie&utm_medium=button&utm_campaign=launch';
-      const src = new URL(window.location.href).searchParams.get('src');
-
-      // Label TikTok-origin sessions (arrived via moxiestop) without changing your base UTMs
-      btn.href = (src === 'tt' || src === 'tiktok') ? (base + '&utm_content=tiktok') : base;
-    })();
-  </script>
-
-  <!-- EmailOctopus default popup -->
-  <script async src="https://eocampaign1.com/form/f65eadae-9b07-11f0-904b-25edc07f31dd.js"
-          data-form="f65eadae-9b07-11f0-904b-25edc07f31dd"></script>
+  </div>
 </body>
 </html>
