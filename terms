@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Terms of Use — Suburban Moxie</title>
+  <meta name="description" content="Terms of Use for Suburban Moxie." />
+  <link rel="icon" href="../images/avatar.jpg" />
+  <style>
+    :root { --bg:#0f0f12; --card:#15161a; --text:#f4f6f8; --muted:#b8bec7; --accent:#f23c86; }
+    body {
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1200px 800px at 80% -10%, #1c1d22, transparent), var(--bg); color: var(--text);
+    }
+    .wrap {
+      max-width: 800px; margin: 40px auto; padding: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)), var(--card);
+      border: 1px solid rgba(255,255,255,0.06); border-radius: 18px;
+    }
+    h1 { margin: 0 0 12px; }
+    h2 { margin: 22px 0 8px; font-size: 1.05rem; }
+    p, li { color: var(--muted); line-height: 1.6; }
+    a { color: #ff7ab5; }
+    small { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>Terms of Use</h1>
+    <p><small>Effective date: <span id="d"></span></small></p>
+
+    <h2>Acceptance of terms</h2>
+    <p>By accessing and using this website (“Site”), you agree to be bound by these Terms of Use and all applicable laws. If you do not agree, do not use this Site.</p>
+
+    <h2>Eligibility</h2>
+    <p>This Site and all related services are intended for <strong>adults 18+</strong> only. You must not use this Site if you are under 18.</p>
+
+    <h2>Content</h2>
+    <ul>
+      <li>All text, images, videos, and other materials are for personal, non-commercial viewing only.</li>
+      <li>You may not copy, redistribute, or exploit content without permission.</li>
+      <li>Some content may contain adult themes and is provided for lawful use by consenting adults.</li>
+    </ul>
+
+    <h2>User responsibilities</h2>
+    <ul>
+      <li>You agree not to misuse the Site, including attempting to hack, disrupt, or otherwise damage systems.</li>
+      <li>You agree not to harass, exploit, or threaten others through links or contact information found here.</li>
+      <li>You are responsible for keeping your devices and connections secure while accessing this Site.</li>
+    </ul>
+
+    <h2>External links</h2>
+    <p>This Site contains links to third-party platforms (OnlyFans, Chaturbate, etc.). We are not responsible for the content, policies, or practices of those platforms. Use them at your own risk and under their own terms.</p>
+
+    <h2>Disclaimer</h2>
+    <p>The Site is provided “as is” without warranties of any kind. We do not guarantee uninterrupted access, accuracy, or reliability of content. Your use is at your own risk.</p>
+
+    <h2>Limitation of liability</h2>
+    <p>To the maximum extent permitted by law, we are not liable for any damages arising from your use of this Site or linked platforms.</p>
+
+    <h2>Changes</h2>
+    <p>We may update these Terms of Use at any time. Updates will be reflected here with a new effective date.</p>
+
+    <h2>Contact</h2>
+    <p>For questions, email <a href="mailto:support@suburbanmoxxxie.com">support@suburbanmoxxxie.com</a>.</p>
+
+    <p><a href="/">← Back to site</a></p>
+  </main>
+  <script>document.getElementById('d').textContent = new Date().toLocaleDateString();</script>
+</body>
+</html>
