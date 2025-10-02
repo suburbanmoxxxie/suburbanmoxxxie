@@ -22,6 +22,7 @@
       display:block; text-align:center; padding:14px 16px;
       border-radius:12px; border:1px solid #3a3a40;
       text-decoration:none; color:#fff; font-weight:600; margin:10px 0;
+      cursor:pointer;
     }
     .btn.primary { background:#4b7bf5; border-color:#4b7bf5 }
     .btn.live { background:#26a269 }
@@ -33,9 +34,32 @@
       width:120px; height:120px; border-radius:50%; object-fit:cover;
       border:2px solid #3a3a40; margin-bottom:12px;
     }
+
+    /* --- Modal (flyout) --- */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,.6);
+      display: none; align-items: center; justify-content: center; z-index: 50;
+    }
+    .modal {
+      width: min(92%, 520px);
+      background: #15161a; border:1px solid rgba(255,255,255,.08);
+      border-radius: 16px; padding: 18px 18px 14px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.35);
+      text-align: left;
+    }
+    .modal h3 { margin: 4px 0 6px; font-size: 18px; }
+    .modal p { margin: 0 0 12px; color: #b8bec7; line-height: 1.5; }
+    .modal .row { display:flex; gap:10px; margin-top:12px; }
+    .modal .xbtn {
+      flex:1; text-align:center; padding:12px 14px; border-radius:10px;
+      font-weight:600; border:1px solid #3a3a40; background:#1b1c21; color:#fff;
+      cursor:pointer;
+    }
+    .modal .xbtn.primary { background:#4b7bf5; border-color:#4b7bf5; }
+    .modal .xbtn.secondary { background:#202127; }
   </style>
   <script>
-    // Carry UTM tags forward
+    // Carry UTM tags forward to outbound links
     function getParams(){
       const p=new URLSearchParams(location.search);
       return {
@@ -53,13 +77,63 @@
       }
       return u.toString();
     }
+
+    let pendingHref = null; // holds link awaiting confirmation
+
     document.addEventListener('DOMContentLoaded',()=>{
       const params=getParams();
+
+      // Enhance outbound links
       document.querySelectorAll('a[data-propagate="true"]').forEach(a=>{
         a.href=withUTM(a.href,params);
-        a.addEventListener('click',()=>{ if(window.plausible) plausible('Outbound Link: '+a.dataset.name); });
+
+        // Attach click handler only if confirmation is required
+        if (a.dataset.confirm === 'true') {
+          a.addEventListener('click',(e)=>{
+            // Allow bypass with Cmd/Ctrl click or middle-click for new tab
+            if (e.metaKey || e.ctrlKey || e.button === 1) return;
+            e.preventDefault();
+            pendingHref = a.href;
+            showModal(a.dataset.name || 'External link');
+          });
+        } else {
+          // No confirm: still log Plausible event on click
+          a.addEventListener('click',()=>{ if(window.plausible) plausible('Outbound Link: '+(a.dataset.name||'Link')); });
+        }
+      });
+
+      // Modal buttons
+      const goBtn = document.getElementById('confirm-go');
+      const cancelBtn = document.getElementById('confirm-cancel');
+      const closeArea = document.getElementById('modal-backdrop');
+      goBtn.addEventListener('click',()=>{
+        if (pendingHref) {
+          if (window.plausible) plausible('Outbound Link: Confirmed');
+          window.location.href = pendingHref;
+          pendingHref = null;
+        }
+        hideModal();
+      });
+      cancelBtn.addEventListener('click',()=>{ pendingHref=null; hideModal(); });
+      // click backdrop to close (but not when clicking the dialog itself)
+      closeArea.addEventListener('click',(e)=>{
+        if (e.target === closeArea) { pendingHref=null; hideModal(); }
+      });
+      document.addEventListener('keydown',(e)=>{
+        if (e.key === 'Escape') { pendingHref=null; hideModal(); }
       });
     });
+
+    function showModal(name){
+      const title = document.getElementById('confirm-title');
+      const text  = document.getElementById('confirm-text');
+      title.textContent = 'Sensitive content';
+      text.textContent  = 'This link may lead to explicit 18+ material. Are you sure you want to continue?';
+      document.getElementById('modal-backdrop').style.display='flex';
+    }
+    function hideModal(){
+      document.getElementById('modal-backdrop').style.display='none';
+    }
   </script>
 </head>
 <body>
@@ -72,28 +146,28 @@
       <p class="sub">Exclusive 18+ Content & Live Streams</p>
     </div>
 
-    <!-- Tier 1: Core funnels -->
+    <!-- Tier 1: Core funnels (confirmation enabled) -->
     <div class="card">
-      <a class="btn primary" data-name="OnlyFans" data-propagate="true"
+      <a class="btn primary" data-name="OnlyFans" data-propagate="true" data-confirm="true"
          href="https://onlyfans.com/YOUR_HANDLE">💙 OnlyFans — Subscribe</a>
-      <a class="btn live" data-name="Chaturbate" data-propagate="true"
+      <a class="btn live" data-name="Chaturbate" data-propagate="true" data-confirm="true"
          href="https://chaturbate.com/YOUR_HANDLE">🔴 I’m Live on Chaturbate</a>
-      <a class="btn" data-name="ManyVids" data-propagate="true"
+      <a class="btn" data-name="ManyVids" data-propagate="true" data-confirm="true"
          href="https://www.manyvids.com/Profile/YOUR_HANDLE/Store/">🛒 ManyVids — Clips</a>
     </div>
 
-    <!-- Email capture -->
+    <!-- Email capture (no confirmation) -->
     <div class="card">
       <h2 style="margin:0 0 8px">Get updates</h2>
       <script async src="https://eocampaign1.com/form/9f8b5136-9f7a-11f0-8b6d-b31dd542261e.js" data-form="9f8b5136-9f7a-11f0-8b6d-b31dd542261e"></script>
       <p class="disclaimer">Double opt-in. Unsubscribe anytime.</p>
     </div>
 
-    <!-- Tier 2: Discovery -->
+    <!-- Tier 2: Discovery (confirmation enabled) -->
     <div class="card">
-      <a class="btn" data-name="Pornhub" data-propagate="true"
+      <a class="btn" data-name="Pornhub" data-propagate="true" data-confirm="true"
          href="https://www.pornhub.com/model/YOUR_HANDLE">🔒 Free Samples — Pornhub<span class="lock"> (explicit)</span></a>
-      <a class="btn" data-name="RedGIFs" data-propagate="true"
+      <a class="btn" data-name="RedGIFs" data-propagate="true" data-confirm="true"
          href="https://www.redgifs.com/users/YOUR_HANDLE">🔒 Loops — RedGIFs<span class="lock"> (explicit)</span></a>
     </div>
 
@@ -101,6 +175,18 @@
     <div class="footer">
       © Suburban Moxie • All rights reserved <br/>
       <a href="/safety">Report Safety Concern</a> | <a href="/privacy">Privacy Policy</a>
+    </div>
+  </div>
+
+  <!-- Modal (flyout) -->
+  <div class="modal-backdrop" id="modal-backdrop" aria-modal="true" role="dialog">
+    <div class="modal" role="document" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+      <h3 id="confirm-title">Sensitive content</h3>
+      <p id="confirm-text">This link may lead to explicit 18+ material. Are you sure you want to continue?</p>
+      <div class="row">
+        <button class="xbtn secondary" id="confirm-cancel" type="button">Cancel</button>
+        <button class="xbtn primary" id="confirm-go" type="button">Continue</button>
+      </div>
     </div>
   </div>
 </body>
