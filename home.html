@@ -59,7 +59,6 @@
     .modal .xbtn.secondary { background:#202127; }
   </style>
   <script>
-    // Carry UTM tags forward to outbound links
     function getParams(){
       const p=new URLSearchParams(location.search);
       return {
@@ -78,57 +77,34 @@
       return u.toString();
     }
 
-    let pendingHref = null; // holds link awaiting confirmation
+    let pendingHref = null;
 
     document.addEventListener('DOMContentLoaded',()=>{
       const params=getParams();
-
-      // Enhance outbound links
       document.querySelectorAll('a[data-propagate="true"]').forEach(a=>{
         a.href=withUTM(a.href,params);
-
-        // Attach click handler only if confirmation is required
         if (a.dataset.confirm === 'true') {
           a.addEventListener('click',(e)=>{
-            // Allow bypass with Cmd/Ctrl click or middle-click for new tab
             if (e.metaKey || e.ctrlKey || e.button === 1) return;
             e.preventDefault();
             pendingHref = a.href;
-            showModal(a.dataset.name || 'External link');
+            showModal();
           });
         } else {
-          // No confirm: still log Plausible event on click
           a.addEventListener('click',()=>{ if(window.plausible) plausible('Outbound Link: '+(a.dataset.name||'Link')); });
         }
       });
 
-      // Modal buttons
-      const goBtn = document.getElementById('confirm-go');
-      const cancelBtn = document.getElementById('confirm-cancel');
-      const closeArea = document.getElementById('modal-backdrop');
-      goBtn.addEventListener('click',()=>{
-        if (pendingHref) {
-          if (window.plausible) plausible('Outbound Link: Confirmed');
-          window.location.href = pendingHref;
-          pendingHref = null;
-        }
+      document.getElementById('confirm-go').addEventListener('click',()=>{
+        if (pendingHref) { if (window.plausible) plausible('Outbound Link: Confirmed'); window.location.href = pendingHref; pendingHref = null; }
         hideModal();
       });
-      cancelBtn.addEventListener('click',()=>{ pendingHref=null; hideModal(); });
-      // click backdrop to close (but not when clicking the dialog itself)
-      closeArea.addEventListener('click',(e)=>{
-        if (e.target === closeArea) { pendingHref=null; hideModal(); }
-      });
-      document.addEventListener('keydown',(e)=>{
-        if (e.key === 'Escape') { pendingHref=null; hideModal(); }
-      });
+      document.getElementById('confirm-cancel').addEventListener('click',()=>{ pendingHref=null; hideModal(); });
+      document.getElementById('modal-backdrop').addEventListener('click',(e)=>{ if (e.target.id==='modal-backdrop'){ pendingHref=null; hideModal(); }});
+      document.addEventListener('keydown',(e)=>{ if (e.key==='Escape'){ pendingHref=null; hideModal(); }});
     });
 
-    function showModal(name){
-      const title = document.getElementById('confirm-title');
-      const text  = document.getElementById('confirm-text');
-      title.textContent = 'Sensitive content';
-      text.textContent  = 'This link may lead to explicit 18+ material. Are you sure you want to continue?';
+    function showModal(){
       document.getElementById('modal-backdrop').style.display='flex';
     }
     function hideModal(){
@@ -146,7 +122,7 @@
       <p class="sub">Exclusive 18+ Content & Live Streams</p>
     </div>
 
-    <!-- Tier 1: Core funnels (confirmation enabled) -->
+    <!-- Tier 1 -->
     <div class="card">
       <a class="btn primary" data-name="OnlyFans" data-propagate="true" data-confirm="true"
          href="https://onlyfans.com/YOUR_HANDLE">💙 OnlyFans — Subscribe</a>
@@ -156,14 +132,14 @@
          href="https://www.manyvids.com/Profile/YOUR_HANDLE/Store/">🛒 ManyVids — Clips</a>
     </div>
 
-    <!-- Email capture (no confirmation) -->
+    <!-- Email -->
     <div class="card">
       <h2 style="margin:0 0 8px">Get updates</h2>
       <script async src="https://eocampaign1.com/form/9f8b5136-9f7a-11f0-8b6d-b31dd542261e.js" data-form="9f8b5136-9f7a-11f0-8b6d-b31dd542261e"></script>
       <p class="disclaimer">Double opt-in. Unsubscribe anytime.</p>
     </div>
 
-    <!-- Tier 2: Discovery (confirmation enabled) -->
+    <!-- Tier 2 -->
     <div class="card">
       <a class="btn" data-name="Pornhub" data-propagate="true" data-confirm="true"
          href="https://www.pornhub.com/model/YOUR_HANDLE">🔒 Free Samples — Pornhub<span class="lock"> (explicit)</span></a>
@@ -171,16 +147,18 @@
          href="https://www.redgifs.com/users/YOUR_HANDLE">🔒 Loops — RedGIFs<span class="lock"> (explicit)</span></a>
     </div>
 
-    <!-- Footer with compliance links -->
+    <!-- Footer -->
     <div class="footer">
       © Suburban Moxie • All rights reserved <br/>
-      <a href="/safety">Report Safety Concern</a> | <a href="/privacy">Privacy Policy</a>
+      <a href="/safety">Report Safety Concern</a> | 
+      <a href="/privacy">Privacy Policy</a> | 
+      <a href="/terms">Terms of Use</a>
     </div>
   </div>
 
-  <!-- Modal (flyout) -->
+  <!-- Modal -->
   <div class="modal-backdrop" id="modal-backdrop" aria-modal="true" role="dialog">
-    <div class="modal" role="document" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+    <div class="modal" role="document">
       <h3 id="confirm-title">Sensitive content</h3>
       <p id="confirm-text">This link may lead to explicit 18+ material. Are you sure you want to continue?</p>
       <div class="row">
