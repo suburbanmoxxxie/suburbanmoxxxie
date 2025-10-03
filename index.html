@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-<script defer data-domain="suburbanmoxxxie.com" src="https://plausible.io/js/script.js"></script>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,7 +9,10 @@
 
   <!-- Open Graph -->
   <meta property="og:title" content="Suburban Moxie" />
-@@ -16,6 +16,9 @@
+  <meta property="og:description" content="Lifestyle • Fitness • Community" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://suburbanmoxxxie.com/images/banner.jpg" />
+  <meta property="og:url" content="https://suburbanmoxxxie.com/" />
 
   <link rel="icon" href="images/avatar.jpg" />
 
@@ -20,69 +22,48 @@
   <style>
     :root {
       --bg: #0f0f12;
-@@ -46,75 +49,31 @@
+      --card: #15161a;
+      --text: #f4f6f8;
+      --muted: #b8bec7;
+      --accent: #f23c86;
+      --accent-hover: #ff5aa0;
+      --ring: rgba(242, 60, 134, 0.4);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 80% -10%, #1c1d22, transparent), var(--bg);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .wrap {
+      width: 100%;
+      max-width: 620px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)), var(--card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
       padding: 28px 24px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.35);
     }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
     .brand { display: flex; align-items: center; gap: 16px; }
     .avatar {
-      width: 64px; height: 64px;
-      border-radius: 50%;
-      object-fit: cover;
       width: 64px; height: 64px; border-radius: 50%; object-fit: cover;
       border: 2px solid rgba(255,255,255,0.15);
-    }
-    h1 {
-      font-size: 1.75rem;
-      line-height: 1.2;
-      margin: 0;
-      letter-spacing: 0.3px;
-    }
-    .tagline {
-      margin: 8px 0 0 0;
-      color: var(--muted);
-      font-size: 0.98rem;
-    }
-    .banner {
-      margin: 18px 0 8px;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.06);
     }
     h1 { font-size: 1.75rem; line-height: 1.2; margin: 0; letter-spacing: 0.3px; }
     .tagline { margin: 8px 0 0 0; color: var(--muted); font-size: 0.98rem; }
     .banner { margin: 18px 0 8px; border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); }
     .banner img { display: block; width: 100%; height: auto; }
-    .cta {
-      display: grid;
-      gap: 12px;
-      margin-top: 16px;
-    }
     .cta { display: grid; gap: 12px; margin-top: 16px; }
     .btn {
-      appearance: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 14px 18px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.10);
-      color: var(--text);
-      background: linear-gradient(180deg, rgba(242,60,134,0.12), rgba(242,60,134,0.05));
       appearance: none; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
       width: 100%; padding: 14px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.10);
       color: var(--text); background: linear-gradient(180deg, rgba(242,60,134,0.12), rgba(242,60,134,0.05));
       transition: transform .05s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
-      text-decoration: none;
-      font-weight: 600;
-      letter-spacing: .2px;
       text-decoration: none; font-weight: 600; letter-spacing: .2px;
     }
     .btn:hover {
@@ -91,51 +72,53 @@
       box-shadow: 0 0 0 6px var(--ring);
     }
     .btn:active { transform: translateY(1px); }
-    .subnote {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 0.9rem;
-      text-align: center;
-    }
-    footer {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 0.85rem;
-      text-align: center;
-    }
     .subnote { margin-top: 8px; color: var(--muted); font-size: 0.9rem; text-align: center; }
     footer { margin-top: 18px; color: var(--muted); font-size: 0.85rem; text-align: center; }
   </style>
 </head>
 <body>
-@@ -127,14 +86,13 @@ <h1>Suburban Moxie 💋</h1>
+  <main class="wrap" role="main">
+    <div class="brand" aria-label="Brand">
+      <img class="avatar" src="images/avatar.jpg" alt="Suburban Moxie profile" />
+      <div>
+        <h1>Suburban Moxie 💋</h1>
+        <p class="tagline">Lifestyle • Fitness • Community</p>
       </div>
     </div>
 
-    <div class="banner" aria-hidden="true">
     <div class="banner">
       <img src="images/banner.jpg" alt="Banner" />
     </div>
 
     <div class="cta">
-      <a class="btn"
-         href="/home?utm_source=suburbanmoxxxie&utm_medium=button&utm_campaign=launch"
-         target="_blank" rel="noopener noreferrer nofollow">
       <!-- This button will point to /home and automatically carry through any incoming UTM params -->
       <a id="enter-btn" class="btn" href="/home" rel="noopener noreferrer nofollow">
         Enter — 18+ only
       </a>
     </div>
-@@ -158,21 +116,50 @@ <h1>Suburban Moxie 💋</h1>
+
+    <p class="subnote">
+      Looking for socials? Search: <strong>Suburban Moxie 💋</strong>
+    </p>
+
+    <p class="subnote">
+      18+ only. By subscribing you agree to receive emails.
+      <a href="/privacy.html" rel="nofollow">Privacy Policy</a>
+    </p>
+
+    <footer>
+      © <span id="year"></span> Suburban Moxie. All rights reserved.
+    </footer>
+  </main>
+
+  <script>
+    // Current year in footer
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 
-  <!-- TikTok-origin tracking: append utm_content=tiktok if coming via moxiestop redirect -->
   <!-- UTM → /home propagation + TikTok labeling -->
   <script>
     (function () {
-      const btn = document.querySelector('.btn');
-      if (!btn) return;
       const BTN = document.getElementById('enter-btn');
       if (!BTN) return;
 
@@ -162,8 +145,6 @@
         if (v) target.searchParams.set(k, v);
       });
 
-      const base = '/home?utm_source=suburbanmoxxxie&utm_medium=button&utm_campaign=launch';
-      const src = new URL(window.location.href).searchParams.get('src');
       // Optional TikTok origin via ?src=tt|tiktok on the root page
       const src = sp.get('src');
       if (src === 'tt' || src === 'tiktok') {
@@ -173,15 +154,13 @@
         }
       }
 
-      // Label TikTok-origin sessions (arrived via moxiestop) without changing your base UTMs
-      btn.href = (src === 'tt' || src === 'tiktok') ? (base + '&utm_content=tiktok') : base;
       // Set final href
       BTN.href = target.toString();
     })();
   </script>
 
-  <!-- EmailOctopus default popup -->
   <!-- EmailOctopus default popup (unchanged) -->
   <script async src="https://eocampaign1.com/form/f65eadae-9b07-11f0-904b-25edc07f31dd.js"
           data-form="f65eadae-9b07-11f0-904b-25edc07f31dd"></script>
 </body>
+</html>
