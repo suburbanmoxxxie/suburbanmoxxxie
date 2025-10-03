@@ -5,112 +5,124 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Suburban Moxie | 18+</title>
   <!-- Plausible Analytics -->
-  <script defer data-domain="suburbanmoxxxie.com" src="https://plausible.io/js/script.js"></script>
-  <style>
-    body {
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:#0b0b0c; color:#f5f5f7; margin:0;
-    }
-    .wrap { max-width:680px; margin:0 auto; padding:24px; text-align:center; }
-    .card {
-      background:#141416; border:1px solid #2a2a2e;
-      border-radius:14px; padding:20px; margin:16px 0;
-    }
-    h1 { font-size:26px; margin:12px 0 4px }
-    p.sub { opacity:.8; margin:0 0 12px }
-    .btn {
-      display:block; text-align:center; padding:14px 16px;
-      border-radius:12px; border:1px solid #3a3a40;
-      text-decoration:none; color:#fff; font-weight:600; margin:10px 0;
-      cursor:pointer;
-    }
-    .btn.primary { background:#4b7bf5; border-color:#4b7bf5 }
-    .btn.live { background:#26a269 }
-    .lock { font-size:12px; opacity:.7; margin-left:6px }
-    .disclaimer { font-size:12px; opacity:.75; margin-top:6px }
-    .footer { opacity:.6;font-size:12px;text-align:center;margin:24px 0 }
-    .footer a { color:#aaa; text-decoration:none; margin:0 6px; }
-    .profile-pic {
-      width:120px; height:120px; border-radius:50%; object-fit:cover;
-      border:2px solid #3a3a40; margin-bottom:12px;
-    }
+<script>
+  (function(){
+    const PARAM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid','ttclid'];
+    const STORAGE_KEY = 'utm_cache_v1';
+    const DAYS_TO_KEEP = 30;
 
-    /* --- Modal (flyout) --- */
-    .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(0,0,0,.6);
-      display: none; align-items: center; justify-content: center; z-index: 50;
+    function now(){ return Date.now(); }
+    function days(ms){ return ms / (1000*60*60*24); }
+
+    function readCache(){
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(_){ return {}; }
     }
-    .modal {
-      width: min(92%, 520px);
-      background: #15161a; border:1px solid rgba(255,255,255,.08);
-      border-radius: 16px; padding: 18px 18px 14px;
-      box-shadow: 0 10px 40px rgba(0,0,0,.35);
-      text-align: left;
+    function writeCache(obj){
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); } catch(_){}
     }
-    .modal h3 { margin: 4px 0 6px; font-size: 18px; }
-    .modal p { margin: 0 0 12px; color: #b8bec7; line-height: 1.5; }
-    .modal .row { display:flex; gap:10px; margin-top:12px; }
-    .modal .xbtn {
-      flex:1; text-align:center; padding:12px 14px; border-radius:10px;
-      font-weight:600; border:1px solid #3a3a40; background:#1b1c21; color:#fff;
-      cursor:pointer;
+    function getParamsFromUrl(){
+      const p = new URLSearchParams(location.search);
+      const out = {};
+      PARAM_KEYS.forEach(k => { if (p.get(k)) out[k] = p.get(k); });
+      return out;
     }
-    .modal .xbtn.primary { background:#4b7bf5; border-color:#4b7bf5; }
-    .modal .xbtn.secondary { background:#202127; }
-  </style>
-  <script>
-    function getParams(){
-      const p=new URLSearchParams(location.search);
+    function inferDefaults(){
+      // sensible defaults when nothing supplied
       return {
-        utm_source:p.get('utm_source')||'direct',
-        utm_medium:p.get('utm_medium')||'site',
-        utm_campaign:p.get('utm_campaign')||'default'
+        utm_source: 'direct',
+        utm_medium: 'site',
+        utm_campaign: 'default'
       };
     }
-    function withUTM(url,params){
-      const u=new URL(url);
-      if(!u.searchParams.get('utm_source')){
-        u.searchParams.set('utm_source',params.utm_source);
-        u.searchParams.set('utm_medium',params.utm_medium);
-        u.searchParams.set('utm_campaign',params.utm_campaign);
+    function resolveParams(){
+      const cache = readCache();
+      const incoming = getParamsFromUrl();
+      let use = {};
+
+      if (Object.keys(incoming).length) {
+        use = { ...cache.params, ...incoming };
+        writeCache({ params: use, ts: now() });
+      } else if (cache.params && cache.ts && days(now() - cache.ts) <= DAYS_TO_KEEP) {
+        use = cache.params;
+      } else {
+        use = inferDefaults();
       }
+      // Always ensure the big 3 exist
+      use.utm_source  = use.utm_source  || 'direct';
+      use.utm_medium  = use.utm_medium  || 'site';
+      use.utm_campaign= use.utm_campaign|| 'default';
+      return use;
+    }
+
+    function withParams(url, params){
+      const u = new URL(url, location.origin);
+      PARAM_KEYS.forEach(k => {
+        if (!u.searchParams.get(k) && params[k]) u.searchParams.set(k, params[k]);
+      });
       return u.toString();
     }
 
     let pendingHref = null;
 
-    document.addEventListener('DOMContentLoaded',()=>{
-      const params=getParams();
-      document.querySelectorAll('a[data-propagate="true"]').forEach(a=>{
-        a.href=withUTM(a.href,params);
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = resolveParams();
+
+      // Outbound buttons with UTM propagation + consent modal
+      document.querySelectorAll('a[data-propagate="true"]').forEach(a => {
+        a.href = withParams(a.href, params);
+
+        const track = (label) => {
+          if (window.plausible) {
+            plausible('Outbound Link', { props: {
+              name: a.dataset.name || 'Link',
+              label: label || 'click',
+              href: a.href,
+              utm_source: params.utm_source,
+              utm_medium: params.utm_medium,
+              utm_campaign: params.utm_campaign
+            }});
+          }
+        };
+
         if (a.dataset.confirm === 'true') {
-          a.addEventListener('click',(e)=>{
-            if (e.metaKey || e.ctrlKey || e.button === 1) return;
+          a.addEventListener('click', (e) => {
+            if (e.metaKey || e.ctrlKey || e.button === 1) return; // allow new-tab
             e.preventDefault();
             pendingHref = a.href;
             showModal();
+            track('prompt');
           });
         } else {
-          a.addEventListener('click',()=>{ if(window.plausible) plausible('Outbound Link: '+(a.dataset.name||'Link')); });
+          a.addEventListener('click', () => track('direct'));
         }
+
+        // Safety rel attributes
+        a.setAttribute('rel','nofollow noopener external');
       });
 
-      document.getElementById('confirm-go').addEventListener('click',()=>{
-        if (pendingHref) { if (window.plausible) plausible('Outbound Link: Confirmed'); window.location.href = pendingHref; pendingHref = null; }
+      // Modal controls
+      const goBtn = document.getElementById('confirm-go');
+      const cancelBtn = document.getElementById('confirm-cancel');
+      const backdrop = document.getElementById('modal-backdrop');
+
+      if (goBtn) goBtn.addEventListener('click', () => {
+        if (pendingHref) {
+          if (window.plausible) plausible('Outbound Link', { props: { name: 'Confirmed', href: pendingHref }});
+          location.href = pendingHref;
+          pendingHref = null;
+        }
         hideModal();
       });
-      document.getElementById('confirm-cancel').addEventListener('click',()=>{ pendingHref=null; hideModal(); });
-      document.getElementById('modal-backdrop').addEventListener('click',(e)=>{ if (e.target.id==='modal-backdrop'){ pendingHref=null; hideModal(); }});
-      document.addEventListener('keydown',(e)=>{ if (e.key==='Escape'){ pendingHref=null; hideModal(); }});
+      if (cancelBtn) cancelBtn.addEventListener('click', () => { pendingHref = null; hideModal(); });
+      if (backdrop) backdrop.addEventListener('click', (e) => { if (e.target.id === 'modal-backdrop'){ pendingHref = null; hideModal(); }});
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape'){ pendingHref = null; hideModal(); }});
     });
 
-    function showModal(){
-      document.getElementById('modal-backdrop').style.display='flex';
-    }
-    function hideModal(){
-      document.getElementById('modal-backdrop').style.display='none';
-    }
-  </script>
+    function showModal(){ document.getElementById('modal-backdrop').style.display='flex'; }
+    function hideModal(){ document.getElementById('modal-backdrop').style.display='none'; }
+    window.showModal = showModal; window.hideModal = hideModal;
+  })();
+</script>
 </head>
 <body>
   <div class="wrap">
