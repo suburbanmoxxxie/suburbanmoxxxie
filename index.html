@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en">
-<script defer data-domain="suburbanmoxxxie.com" src="https://plausible.io/js/script.js"></script>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Suburban Moxie</title>
   <meta name="description" content="Suburban Moxie — lifestyle, fitness, and community vibes. Explore more on my official site." />
+  <link rel="canonical" href="https://suburbanmoxxxie.com/" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Suburban Moxie" />
@@ -15,6 +15,9 @@
   <meta property="og:url" content="https://suburbanmoxxxie.com/" />
 
   <link rel="icon" href="images/avatar.jpg" />
+
+  <!-- Plausible Analytics -->
+  <script defer data-domain="suburbanmoxxxie.com" src="https://plausible.io/js/script.js"></script>
 
   <style>
     :root {
@@ -46,56 +49,22 @@
       padding: 28px 24px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.35);
     }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
+    .brand { display: flex; align-items: center; gap: 16px; }
     .avatar {
-      width: 64px; height: 64px;
-      border-radius: 50%;
-      object-fit: cover;
+      width: 64px; height: 64px; border-radius: 50%; object-fit: cover;
       border: 2px solid rgba(255,255,255,0.15);
     }
-    h1 {
-      font-size: 1.75rem;
-      line-height: 1.2;
-      margin: 0;
-      letter-spacing: 0.3px;
-    }
-    .tagline {
-      margin: 8px 0 0 0;
-      color: var(--muted);
-      font-size: 0.98rem;
-    }
-    .banner {
-      margin: 18px 0 8px;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
+    h1 { font-size: 1.75rem; line-height: 1.2; margin: 0; letter-spacing: 0.3px; }
+    .tagline { margin: 8px 0 0 0; color: var(--muted); font-size: 0.98rem; }
+    .banner { margin: 18px 0 8px; border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); }
     .banner img { display: block; width: 100%; height: auto; }
-    .cta {
-      display: grid;
-      gap: 12px;
-      margin-top: 16px;
-    }
+    .cta { display: grid; gap: 12px; margin-top: 16px; }
     .btn {
-      appearance: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 14px 18px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.10);
-      color: var(--text);
-      background: linear-gradient(180deg, rgba(242,60,134,0.12), rgba(242,60,134,0.05));
+      appearance: none; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 14px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.10);
+      color: var(--text); background: linear-gradient(180deg, rgba(242,60,134,0.12), rgba(242,60,134,0.05));
       transition: transform .05s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
-      text-decoration: none;
-      font-weight: 600;
-      letter-spacing: .2px;
+      text-decoration: none; font-weight: 600; letter-spacing: .2px;
     }
     .btn:hover {
       background: linear-gradient(180deg, rgba(242,60,134,0.18), rgba(242,60,134,0.1));
@@ -103,18 +72,8 @@
       box-shadow: 0 0 0 6px var(--ring);
     }
     .btn:active { transform: translateY(1px); }
-    .subnote {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 0.9rem;
-      text-align: center;
-    }
-    footer {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 0.85rem;
-      text-align: center;
-    }
+    .subnote { margin-top: 8px; color: var(--muted); font-size: 0.9rem; text-align: center; }
+    footer { margin-top: 18px; color: var(--muted); font-size: 0.85rem; text-align: center; }
   </style>
 </head>
 <body>
@@ -127,14 +86,13 @@
       </div>
     </div>
 
-    <div class="banner" aria-hidden="true">
+    <div class="banner">
       <img src="images/banner.jpg" alt="Banner" />
     </div>
 
     <div class="cta">
-      <a class="btn"
-         href="/home?utm_source=suburbanmoxxxie&utm_medium=button&utm_campaign=launch"
-         target="_blank" rel="noopener noreferrer nofollow">
+      <!-- This button will point to /home and automatically carry through any incoming UTM params -->
+      <a id="enter-btn" class="btn" href="/home" rel="noopener noreferrer nofollow">
         Enter — 18+ only
       </a>
     </div>
@@ -158,21 +116,50 @@
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 
-  <!-- TikTok-origin tracking: append utm_content=tiktok if coming via moxiestop redirect -->
+  <!-- UTM → /home propagation + TikTok labeling -->
   <script>
     (function () {
-      const btn = document.querySelector('.btn');
-      if (!btn) return;
+      const BTN = document.getElementById('enter-btn');
+      if (!BTN) return;
 
-      const base = '/home?utm_source=suburbanmoxxxie&utm_medium=button&utm_campaign=launch';
-      const src = new URL(window.location.href).searchParams.get('src');
+      // Read existing UTMs from current URL
+      const url = new URL(window.location.href);
+      const sp = url.searchParams;
 
-      // Label TikTok-origin sessions (arrived via moxiestop) without changing your base UTMs
-      btn.href = (src === 'tt' || src === 'tiktok') ? (base + '&utm_content=tiktok') : base;
+      // Keys we care about (you can add utm_term / utm_content if needed)
+      const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+
+      // Defaults if none provided
+      const defaults = {
+        utm_source: 'suburbanmoxxxie',
+        utm_medium: 'button',
+        utm_campaign: 'launch'
+      };
+
+      // Base target is /home
+      const target = new URL('/home', window.location.origin);
+
+      // Apply UTMs from current page (or defaults if missing)
+      UTM_KEYS.forEach(k => {
+        const v = sp.get(k) || defaults[k];
+        if (v) target.searchParams.set(k, v);
+      });
+
+      // Optional TikTok origin via ?src=tt|tiktok on the root page
+      const src = sp.get('src');
+      if (src === 'tt' || src === 'tiktok') {
+        // Respect existing utm_content if already present; otherwise set to tiktok
+        if (!target.searchParams.get('utm_content')) {
+          target.searchParams.set('utm_content', 'tiktok');
+        }
+      }
+
+      // Set final href
+      BTN.href = target.toString();
     })();
   </script>
 
-  <!-- EmailOctopus default popup -->
+  <!-- EmailOctopus default popup (unchanged) -->
   <script async src="https://eocampaign1.com/form/f65eadae-9b07-11f0-904b-25edc07f31dd.js"
           data-form="f65eadae-9b07-11f0-904b-25edc07f31dd"></script>
 </body>
