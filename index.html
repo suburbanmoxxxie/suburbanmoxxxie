@@ -81,7 +81,7 @@
     <div class="brand" aria-label="Brand">
       <img class="avatar" src="images/avatar.jpg" alt="Suburban Moxie profile" />
       <div>
-        <h1>Suburban Moxie 💋</h1>
+        <h1>Suburban Moxie 🪩</h1>
         <p class="tagline">Lifestyle • Fitness • Community</p>
       </div>
     </div>
@@ -91,14 +91,13 @@
     </div>
 
     <div class="cta">
-      <!-- This button will point to /home and automatically carry through any incoming UTM params -->
       <a id="enter-btn" class="btn" href="/home" rel="noopener noreferrer nofollow">
         Enter — 18+ only
       </a>
     </div>
 
     <p class="subnote">
-      Looking for socials? Search: <strong>Suburban Moxie 💋</strong>
+      Looking for socials? Search: <strong>Suburban Moxie 🪩</strong>
     </p>
 
     <p class="subnote">
@@ -122,44 +121,29 @@
       const BTN = document.getElementById('enter-btn');
       if (!BTN) return;
 
-      // Read existing UTMs from current URL
       const url = new URL(window.location.href);
       const sp = url.searchParams;
-
-      // Keys we care about (you can add utm_term / utm_content if needed)
       const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
-
-      // Defaults if none provided
-      const defaults = {
-        utm_source: 'suburbanmoxxxie',
-        utm_medium: 'button',
-        utm_campaign: 'launch'
-      };
-
-      // Base target is /home
+      const defaults = { utm_source: 'suburbanmoxxxie', utm_medium: 'button', utm_campaign: 'launch' };
       const target = new URL('/home', window.location.origin);
 
-      // Apply UTMs from current page (or defaults if missing)
       UTM_KEYS.forEach(k => {
         const v = sp.get(k) || defaults[k];
         if (v) target.searchParams.set(k, v);
       });
 
-      // Optional TikTok origin via ?src=tt|tiktok on the root page
       const src = sp.get('src');
       if (src === 'tt' || src === 'tiktok') {
-        // Respect existing utm_content if already present; otherwise set to tiktok
         if (!target.searchParams.get('utm_content')) {
           target.searchParams.set('utm_content', 'tiktok');
         }
       }
 
-      // Set final href
       BTN.href = target.toString();
     })();
   </script>
 
-  <!-- EmailOctopus default popup (unchanged) -->
+  <!-- EmailOctopus default popup -->
   <script async src="https://eocampaign1.com/form/f65eadae-9b07-11f0-904b-25edc07f31dd.js"
           data-form="f65eadae-9b07-11f0-904b-25edc07f31dd"></script>
 </body>
