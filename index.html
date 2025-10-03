@@ -1,249 +1,187 @@
 <!doctype html>
 <html lang="en">
+<script defer data-domain="suburbanmoxxxie.com" src="https://plausible.io/js/script.js"></script>
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Suburban Moxie | 18+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Suburban Moxie</title>
+  <meta name="description" content="Suburban Moxie — lifestyle, fitness, and community vibes. Explore more on my official site." />
+  <link rel="canonical" href="https://suburbanmoxxxie.com/" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Suburban Moxie" />
+@@ -16,6 +16,9 @@
+
+  <link rel="icon" href="images/avatar.jpg" />
 
   <!-- Plausible Analytics -->
   <script defer data-domain="suburbanmoxxxie.com" src="https://plausible.io/js/script.js"></script>
 
-  <!-- UTM Propagation + Tracking + Modal Wiring -->
-  <script>
-    (function(){
-      const PARAM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid','ttclid'];
-      const STORAGE_KEY = 'utm_cache_v1';
-      const DAYS_TO_KEEP = 30;
-
-      function now(){ return Date.now(); }
-      function days(ms){ return ms / (1000*60*60*24); }
-      function readCache(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(_){ return {}; } }
-      function writeCache(obj){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); } catch(_){} }
-      function getParamsFromUrl(){
-        const p = new URLSearchParams(location.search);
-        const out = {}; PARAM_KEYS.forEach(k => { if (p.get(k)) out[k] = p.get(k); });
-        return out;
-      }
-      function inferDefaults(){ return { utm_source:'direct', utm_medium:'site', utm_campaign:'home' }; }
-      function resolveParams(){
-        const cache = readCache(), incoming = getParamsFromUrl();
-        let use = {};
-        if (Object.keys(incoming).length){ use = { ...(cache.params||{}), ...incoming }; writeCache({ params: use, ts: now() }); }
-        else if (cache.params && cache.ts && days(now() - cache.ts) <= DAYS_TO_KEEP){ use = cache.params; }
-        else { use = inferDefaults(); }
-        use.utm_source ||= 'direct'; use.utm_medium ||= 'site'; use.utm_campaign ||= 'home';
-        return use;
-      }
-      function withParams(url, params){
-        const u = new URL(url, location.origin);
-        PARAM_KEYS.forEach(k => { if (!u.searchParams.get(k) && params[k]) u.searchParams.set(k, params[k]); });
-        return u.toString();
-      }
-
-      let pendingHref = null;
-
-      document.addEventListener('DOMContentLoaded', () => {
-        const params = resolveParams();
-
-        // Wire outbound links
-        document.querySelectorAll('a[data-propagate="true"]').forEach(a => {
-          a.href = withParams(a.href, params);
-
-          const track = (label) => {
-            if (window.plausible) plausible('Outbound Link', { props: {
-              name: a.dataset.name || 'Link',
-              label: label || 'click',
-              href: a.href,
-              utm_source: params.utm_source,
-              utm_medium: params.utm_medium,
-              utm_campaign: params.utm_campaign
-            }});
-          };
-
-          if (a.dataset.confirm === 'true') {
-            a.addEventListener('click', (e) => {
-              if (e.metaKey || e.ctrlKey || e.button === 1) return; // allow new-tab
-              e.preventDefault();
-              pendingHref = a.href;
-              showModal();
-              track('prompt');
-            });
-          } else {
-            a.addEventListener('click', () => track('direct'));
-          }
-
-          // Safety rel attributes
-          a.setAttribute('rel','nofollow noopener external');
-        });
-
-        // Modal controls
-        const goBtn = document.getElementById('confirm-go');
-        const cancelBtn = document.getElementById('confirm-cancel');
-        const backdrop = document.getElementById('modal-backdrop');
-
-        if (goBtn) goBtn.addEventListener('click', () => {
-          if (pendingHref) {
-            if (window.plausible) plausible('Outbound Link', { props: { name: 'Confirmed', href: pendingHref }});
-            location.href = pendingHref;
-            pendingHref = null;
-          }
-          hideModal();
-        });
-        if (cancelBtn) cancelBtn.addEventListener('click', () => { pendingHref = null; hideModal(); });
-        if (backdrop) backdrop.addEventListener('click', (e) => { if (e.target.id==='modal-backdrop'){ pendingHref=null; hideModal(); }});
-        document.addEventListener('keydown', (e) => { if (e.key==='Escape'){ pendingHref=null; hideModal(); }});
-      });
-
-      function showModal(){ document.getElementById('modal-backdrop').style.display='flex'; }
-      function hideModal(){ document.getElementById('modal-backdrop').style.display='none'; }
-      window.showModal = showModal; window.hideModal = hideModal;
-    })();
-  </script>
-
-  <!-- Styles -->
   <style>
-    body {
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:#0b0b0c; color:#f5f5f7; margin:0;
+    :root {
+      --bg: #0f0f12;
+@@ -46,75 +49,31 @@
+      padding: 28px 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
     }
-    .wrap { max-width:680px; margin:0 auto; padding:24px; text-align:center; }
-    .card {
-      background:#141416; border:1px solid #2a2a2e;
-      border-radius:14px; padding:20px; margin:16px 0;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
-    h1 { font-size:26px; margin:12px 0 4px }
-    p.sub { opacity:.8; margin:0 0 12px }
+    .brand { display: flex; align-items: center; gap: 16px; }
+    .avatar {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      width: 64px; height: 64px; border-radius: 50%; object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.15);
+    }
+    h1 {
+      font-size: 1.75rem;
+      line-height: 1.2;
+      margin: 0;
+      letter-spacing: 0.3px;
+    }
+    .tagline {
+      margin: 8px 0 0 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+    .banner {
+      margin: 18px 0 8px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    h1 { font-size: 1.75rem; line-height: 1.2; margin: 0; letter-spacing: 0.3px; }
+    .tagline { margin: 8px 0 0 0; color: var(--muted); font-size: 0.98rem; }
+    .banner { margin: 18px 0 8px; border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); }
+    .banner img { display: block; width: 100%; height: auto; }
+    .cta {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .cta { display: grid; gap: 12px; margin-top: 16px; }
     .btn {
-      display:block; text-align:center; padding:14px 16px;
-      border-radius:12px; border:1px solid #3a3a40;
-      text-decoration:none; color:#fff; font-weight:600; margin:10px 0;
-      cursor:pointer; transition: opacity .2s ease;
+      appearance: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.10);
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(242,60,134,0.12), rgba(242,60,134,0.05));
+      appearance: none; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 14px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.10);
+      color: var(--text); background: linear-gradient(180deg, rgba(242,60,134,0.12), rgba(242,60,134,0.05));
+      transition: transform .05s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: .2px;
+      text-decoration: none; font-weight: 600; letter-spacing: .2px;
     }
-    .btn.primary { background:#4b7bf5; border-color:#4b7bf5 }
-    /* Live button color is controlled by JS (no default background here) */
-    .btn.live:hover { opacity: 0.9; }
-    .lock { font-size:12px; opacity:.7; margin-left:6px }
-    .disclaimer { font-size:12px; opacity:.75; margin-top:6px }
-    .footer { opacity:.6;font-size:12px;text-align:center;margin:24px 0 }
-    .footer a { color:#aaa; text-decoration:none; margin:0 6px; }
-    .profile-pic {
-      width:120px; height:120px; border-radius:50%; object-fit:cover;
-      border:2px solid #3a3a40; margin-bottom:12px;
+    .btn:hover {
+      background: linear-gradient(180deg, rgba(242,60,134,0.18), rgba(242,60,134,0.1));
+      border-color: rgba(242,60,134,0.4);
+      box-shadow: 0 0 0 6px var(--ring);
     }
-    /* Modal */
-    .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(0,0,0,.6);
-      display: none; align-items: center; justify-content: center; z-index: 50;
+    .btn:active { transform: translateY(1px); }
+    .subnote {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
     }
-    .modal {
-      width: min(92%, 520px);
-      background: #15161a; border:1px solid rgba(255,255,255,.08);
-      border-radius: 16px; padding: 18px 18px 14px;
-      box-shadow: 0 10px 40px rgba(0,0,0,.35);
-      text-align: left;
+    footer {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: center;
     }
-    .modal h3 { margin: 4px 0 6px; font-size: 18px; }
-    .modal p { margin: 0 0 12px; color: #b8bec7; line-height: 1.5; }
-    .modal .row { display:flex; gap:10px; margin-top:12px; }
-    .modal .xbtn {
-      flex:1; text-align:center; padding:12px 14px; border-radius:10px;
-      font-weight:600; border:1px solid #3a3a40; background:#1b1c21; color:#fff;
-      cursor:pointer;
-    }
-    .modal .xbtn.primary { background:#4b7bf5; border-color:#4b7bf5; }
-    .modal .xbtn.secondary { background:#202127; }
+    .subnote { margin-top: 8px; color: var(--muted); font-size: 0.9rem; text-align: center; }
+    footer { margin-top: 18px; color: var(--muted); font-size: 0.85rem; text-align: center; }
   </style>
 </head>
-
 <body>
-  <div class="wrap">
-
-    <!-- Profile block -->
-    <div class="card">
-      <img src="../images/avatar.jpg" alt="Profile Picture" class="profile-pic" />
-      <h1>Suburban Moxie</h1>
-      <p class="sub">Exclusive 18+ Content & Live Streams</p>
-    </div>
-
-    <!-- Tier 1 -->
-    <div class="card">
-      <a class="btn primary" data-name="OnlyFans" data-propagate="true" data-confirm="true"
-         href="https://onlyfans.com/suburbanmoxxxie">💙 OnlyFans — Subscribe</a>
-
-      <!-- Live button status will be set by JS -->
-      <a class="btn live" data-name="Chaturbate" data-propagate="true" data-confirm="true"
-         href="https://chaturbate.com/suburbanmoxxxie">
-         Checking status…
-      </a>
-
-      <a class="btn" data-name="ManyVids" data-propagate="true" data-confirm="true"
-         href="https://suburbanmoxxxie.manyvids.com">🛒 ManyVids — Clips</a>
-    </div>
-
-    <!-- Email -->
-    <div class="card">
-      <h2 style="margin:0 0 8px">Get updates</h2>
-      <script async src="https://eocampaign1.com/form/9f8b5136-9f7a-11f0-8b6d-b31dd542261e.js"
-              data-form="9f8b5136-9f7a-11f0-8b6d-b31dd542261e"></script>
-    </div>
-
-    <!-- Tier 2 -->
-    <div class="card">
-      <a class="btn" data-name="Pornhub" data-propagate="true" data-confirm="true"
-         href="https://www.pornhub.com/model/suburban-moxxxie">🔒 Free Samples — Pornhub<span class="lock"> (explicit)</span></a>
-      <a class="btn" data-name="RedGIFs" data-propagate="true" data-confirm="true"
-         href="https://www.redgifs.com/users/suburbanmoxxxie">🔒 Loops — RedGIFs<span class="lock"> (explicit)</span></a>
-      <a class="btn" data-name="Fancentro" data-propagate="true" data-confirm="true"
-         href="https://fancentro.com/suburban-moxxxie">🔒 Fancentro<span class="lock"> (explicit)</span></a>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-      © Suburban Moxie • All rights reserved <br/>
-      <a href="/safety">Report Safety Concern</a> | 
-      <a href="/privacy">Privacy Policy</a> | 
-      <a href="/terms">Terms of Use</a>
-    </div>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal-backdrop" id="modal-backdrop" aria-modal="true" role="dialog">
-    <div class="modal" role="document">
-      <h3 id="confirm-title">Sensitive content</h3>
-      <p id="confirm-text">This link may lead to explicit 18+ material. Are you sure you want to continue?</p>
-      <div class="row">
-        <button class="xbtn secondary" id="confirm-cancel" type="button">Cancel</button>
-        <button class="xbtn primary" id="confirm-go" type="button">Continue</button>
+@@ -127,14 +86,13 @@ <h1>Suburban Moxie 💋</h1>
       </div>
     </div>
-  </div>
 
-  <!-- Chaturbate live/offline status -->
+    <div class="banner" aria-hidden="true">
+    <div class="banner">
+      <img src="images/banner.jpg" alt="Banner" />
+    </div>
+
+    <div class="cta">
+      <a class="btn"
+         href="/home?utm_source=suburbanmoxxxie&utm_medium=button&utm_campaign=launch"
+         target="_blank" rel="noopener noreferrer nofollow">
+      <!-- This button will point to /home and automatically carry through any incoming UTM params -->
+      <a id="enter-btn" class="btn" href="/home" rel="noopener noreferrer nofollow">
+        Enter — 18+ only
+      </a>
+    </div>
+@@ -158,21 +116,50 @@ <h1>Suburban Moxie 💋</h1>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
+  <!-- TikTok-origin tracking: append utm_content=tiktok if coming via moxiestop redirect -->
+  <!-- UTM → /home propagation + TikTok labeling -->
   <script>
-    (async function() {
-      const btn = document.querySelector('.btn.live');
+    (function () {
+      const btn = document.querySelector('.btn');
       if (!btn) return;
+      const BTN = document.getElementById('enter-btn');
+      if (!BTN) return;
 
-      try {
-        const res = await fetch('https://chaturbate.com/api/chatvideoinfo/?username=suburbanmoxxxie');
-        if (!res.ok) throw new Error("Network error");
-        const data = await res.json();
+      // Read existing UTMs from current URL
+      const url = new URL(window.location.href);
+      const sp = url.searchParams;
 
-        if (data.broadcaster_is_live) {
-          // Online / Live → GREEN
-          btn.style.background = "#26a269";
-          btn.textContent = "🟢 Online — Chaturbate";
-        } else {
-          // Offline → RED
-          btn.style.background = "#e53935";
-          btn.textContent = "🔴 Offline — Chaturbate";
+      // Keys we care about (you can add utm_term / utm_content if needed)
+      const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+
+      // Defaults if none provided
+      const defaults = {
+        utm_source: 'suburbanmoxxxie',
+        utm_medium: 'button',
+        utm_campaign: 'launch'
+      };
+
+      // Base target is /home
+      const target = new URL('/home', window.location.origin);
+
+      // Apply UTMs from current page (or defaults if missing)
+      UTM_KEYS.forEach(k => {
+        const v = sp.get(k) || defaults[k];
+        if (v) target.searchParams.set(k, v);
+      });
+
+      const base = '/home?utm_source=suburbanmoxxxie&utm_medium=button&utm_campaign=launch';
+      const src = new URL(window.location.href).searchParams.get('src');
+      // Optional TikTok origin via ?src=tt|tiktok on the root page
+      const src = sp.get('src');
+      if (src === 'tt' || src === 'tiktok') {
+        // Respect existing utm_content if already present; otherwise set to tiktok
+        if (!target.searchParams.get('utm_content')) {
+          target.searchParams.set('utm_content', 'tiktok');
         }
-      } catch (err) {
-        console.error("Chaturbate API error", err);
-        btn.style.background = "#999";
-        btn.textContent = "⚪ Status Unknown — Chaturbate";
       }
+
+      // Label TikTok-origin sessions (arrived via moxiestop) without changing your base UTMs
+      btn.href = (src === 'tt' || src === 'tiktok') ? (base + '&utm_content=tiktok') : base;
+      // Set final href
+      BTN.href = target.toString();
     })();
   </script>
+
+  <!-- EmailOctopus default popup -->
+  <!-- EmailOctopus default popup (unchanged) -->
+  <script async src="https://eocampaign1.com/form/f65eadae-9b07-11f0-904b-25edc07f31dd.js"
+          data-form="f65eadae-9b07-11f0-904b-25edc07f31dd"></script>
 </body>
-</html>
