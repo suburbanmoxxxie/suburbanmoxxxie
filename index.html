@@ -76,6 +76,30 @@
     footer { margin-top: 18px; color: var(--muted); font-size: 0.85rem; text-align: center; }
   </style>
 </head>
+<script>
+  (async function() {
+    const btn = document.querySelector('.btn.live');
+    if (!btn) return;
+
+    try {
+      const res = await fetch('https://chaturbate.com/api/chatvideoinfo/?username=suburbanmoxxxie');
+      if (!res.ok) throw new Error("Network error");
+      const data = await res.json();
+
+      if (data.broadcaster_is_live) {
+        // Online / Live → GREEN
+        btn.style.background = "#26a269"; // green
+        btn.textContent = "🟢 Online — Chaturbate";
+      } else {
+        // Offline → RED
+        btn.style.background = "#e53935"; // red
+        btn.textContent = "🔴 Offline — Chaturbate";
+      }
+    } catch (err) {
+      console.error("Chaturbate API error", err);
+    }
+  })();
+</script>
 <body>
   <main class="wrap" role="main">
     <div class="brand" aria-label="Brand">
