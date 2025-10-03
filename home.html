@@ -6,9 +6,9 @@
   <title>Suburban Moxie | 18+</title>
 
   <!-- Plausible Analytics -->
-  <script defer data-domain="suburbanmoxxxie.com/home" src="https://plausible.io/js/script.js"></script>
+  <script defer data-domain="suburbanmoxxxie.com" src="https://plausible.io/js/script.js"></script>
 
-  <!-- UTM Propagation + Tracking -->
+  <!-- UTM Propagation + Tracking + Modal Wiring -->
   <script>
     (function(){
       const PARAM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid','ttclid'];
@@ -28,10 +28,11 @@
       function resolveParams(){
         const cache = readCache(), incoming = getParamsFromUrl();
         let use = {};
-        if (Object.keys(incoming).length){ use = { ...cache.params, ...incoming }; writeCache({ params: use, ts: now() }); }
+        if (Object.keys(incoming).length){ use = { ...(cache.params||{}), ...incoming }; writeCache({ params: use, ts: now() }); }
         else if (cache.params && cache.ts && days(now() - cache.ts) <= DAYS_TO_KEEP){ use = cache.params; }
         else { use = inferDefaults(); }
-        use.utm_source ||= 'direct'; use.utm_medium ||= 'site'; use.utm_campaign ||= 'home'; return use;
+        use.utm_source ||= 'direct'; use.utm_medium ||= 'site'; use.utm_campaign ||= 'home';
+        return use;
       }
       function withParams(url, params){
         const u = new URL(url, location.origin);
@@ -40,32 +41,52 @@
       }
 
       let pendingHref = null;
+
       document.addEventListener('DOMContentLoaded', () => {
         const params = resolveParams();
+
+        // Wire outbound links
         document.querySelectorAll('a[data-propagate="true"]').forEach(a => {
           a.href = withParams(a.href, params);
+
           const track = (label) => {
             if (window.plausible) plausible('Outbound Link', { props: {
-              name: a.dataset.name || 'Link', label: label || 'click', href: a.href,
-              utm_source: params.utm_source, utm_medium: params.utm_medium, utm_campaign: params.utm_campaign
+              name: a.dataset.name || 'Link',
+              label: label || 'click',
+              href: a.href,
+              utm_source: params.utm_source,
+              utm_medium: params.utm_medium,
+              utm_campaign: params.utm_campaign
             }});
           };
+
           if (a.dataset.confirm === 'true') {
             a.addEventListener('click', (e) => {
-              if (e.metaKey || e.ctrlKey || e.button === 1) return;
-              e.preventDefault(); pendingHref = a.href; showModal(); track('prompt');
+              if (e.metaKey || e.ctrlKey || e.button === 1) return; // allow new-tab
+              e.preventDefault();
+              pendingHref = a.href;
+              showModal();
+              track('prompt');
             });
           } else {
             a.addEventListener('click', () => track('direct'));
           }
+
+          // Safety rel attributes
           a.setAttribute('rel','nofollow noopener external');
         });
 
+        // Modal controls
         const goBtn = document.getElementById('confirm-go');
         const cancelBtn = document.getElementById('confirm-cancel');
         const backdrop = document.getElementById('modal-backdrop');
+
         if (goBtn) goBtn.addEventListener('click', () => {
-          if (pendingHref) { if (window.plausible) plausible('Outbound Link', { props: { name:'Confirmed', href: pendingHref }}); location.href = pendingHref; pendingHref = null; }
+          if (pendingHref) {
+            if (window.plausible) plausible('Outbound Link', { props: { name: 'Confirmed', href: pendingHref }});
+            location.href = pendingHref;
+            pendingHref = null;
+          }
           hideModal();
         });
         if (cancelBtn) cancelBtn.addEventListener('click', () => { pendingHref = null; hideModal(); });
@@ -81,25 +102,54 @@
 
   <!-- Styles -->
   <style>
-    body { font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; background:#0b0b0c; color:#f5f5f7; margin:0; }
+    body {
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:#0b0b0c; color:#f5f5f7; margin:0;
+    }
     .wrap { max-width:680px; margin:0 auto; padding:24px; text-align:center; }
-    .card { background:#141416; border:1px solid #2a2a2e; border-radius:14px; padding:20px; margin:16px 0; }
+    .card {
+      background:#141416; border:1px solid #2a2a2e;
+      border-radius:14px; padding:20px; margin:16px 0;
+    }
     h1 { font-size:26px; margin:12px 0 4px }
     p.sub { opacity:.8; margin:0 0 12px }
-    .btn { display:block; text-align:center; padding:14px 16px; border-radius:12px; border:1px solid #3a3a40; text-decoration:none; color:#fff; font-weight:600; margin:10px 0; cursor:pointer; }
+    .btn {
+      display:block; text-align:center; padding:14px 16px;
+      border-radius:12px; border:1px solid #3a3a40;
+      text-decoration:none; color:#fff; font-weight:600; margin:10px 0;
+      cursor:pointer; transition: opacity .2s ease;
+    }
     .btn.primary { background:#4b7bf5; border-color:#4b7bf5 }
-    .btn.live { background:#26a269 }
+    /* Live button color is controlled by JS (no default background here) */
+    .btn.live:hover { opacity: 0.9; }
     .lock { font-size:12px; opacity:.7; margin-left:6px }
     .disclaimer { font-size:12px; opacity:.75; margin-top:6px }
     .footer { opacity:.6;font-size:12px;text-align:center;margin:24px 0 }
     .footer a { color:#aaa; text-decoration:none; margin:0 6px; }
-    .profile-pic { width:120px; height:120px; border-radius:50%; object-fit:cover; border:2px solid #3a3a40; margin-bottom:12px; }
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: none; align-items: center; justify-content: center; z-index: 50; }
-    .modal { width:min(92%,520px); background:#15161a; border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:18px; box-shadow:0 10px 40px rgba(0,0,0,.35); text-align:left; }
-    .modal h3 { margin:4px 0 6px; font-size:18px; }
-    .modal p { margin:0 0 12px; color:#b8bec7; line-height:1.5; }
+    .profile-pic {
+      width:120px; height:120px; border-radius:50%; object-fit:cover;
+      border:2px solid #3a3a40; margin-bottom:12px;
+    }
+    /* Modal */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,.6);
+      display: none; align-items: center; justify-content: center; z-index: 50;
+    }
+    .modal {
+      width: min(92%, 520px);
+      background: #15161a; border:1px solid rgba(255,255,255,.08);
+      border-radius: 16px; padding: 18px 18px 14px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.35);
+      text-align: left;
+    }
+    .modal h3 { margin: 4px 0 6px; font-size: 18px; }
+    .modal p { margin: 0 0 12px; color: #b8bec7; line-height: 1.5; }
     .modal .row { display:flex; gap:10px; margin-top:12px; }
-    .modal .xbtn { flex:1; text-align:center; padding:12px 14px; border-radius:10px; font-weight:600; border:1px solid #3a3a40; background:#1b1c21; color:#fff; cursor:pointer; }
+    .modal .xbtn {
+      flex:1; text-align:center; padding:12px 14px; border-radius:10px;
+      font-weight:600; border:1px solid #3a3a40; background:#1b1c21; color:#fff;
+      cursor:pointer;
+    }
     .modal .xbtn.primary { background:#4b7bf5; border-color:#4b7bf5; }
     .modal .xbtn.secondary { background:#202127; }
   </style>
@@ -119,8 +169,13 @@
     <div class="card">
       <a class="btn primary" data-name="OnlyFans" data-propagate="true" data-confirm="true"
          href="https://onlyfans.com/suburbanmoxxxie">💙 OnlyFans — Subscribe</a>
+
+      <!-- Live button status will be set by JS -->
       <a class="btn live" data-name="Chaturbate" data-propagate="true" data-confirm="true"
-         href="https://chaturbate.com/suburbanmoxxxie">🔴 I’m Live on Chaturbate</a>
+         href="https://chaturbate.com/suburbanmoxxxie">
+         Checking status…
+      </a>
+
       <a class="btn" data-name="ManyVids" data-propagate="true" data-confirm="true"
          href="https://suburbanmoxxxie.manyvids.com">🛒 ManyVids — Clips</a>
     </div>
@@ -128,7 +183,8 @@
     <!-- Email -->
     <div class="card">
       <h2 style="margin:0 0 8px">Get updates</h2>
-      <script async src="https://eocampaign1.com/form/9f8b5136-9f7a-11f0-8b6d-b31dd542261e.js" data-form="9f8b5136-9f7a-11f0-8b6d-b31dd542261e"></script>
+      <script async src="https://eocampaign1.com/form/9f8b5136-9f7a-11f0-8b6d-b31dd542261e.js"
+              data-form="9f8b5136-9f7a-11f0-8b6d-b31dd542261e"></script>
     </div>
 
     <!-- Tier 2 -->
@@ -161,5 +217,33 @@
       </div>
     </div>
   </div>
+
+  <!-- Chaturbate live/offline status -->
+  <script>
+    (async function() {
+      const btn = document.querySelector('.btn.live');
+      if (!btn) return;
+
+      try {
+        const res = await fetch('https://chaturbate.com/api/chatvideoinfo/?username=suburbanmoxxxie');
+        if (!res.ok) throw new Error("Network error");
+        const data = await res.json();
+
+        if (data.broadcaster_is_live) {
+          // Online / Live → GREEN
+          btn.style.background = "#26a269";
+          btn.textContent = "🟢 Online — Chaturbate";
+        } else {
+          // Offline → RED
+          btn.style.background = "#e53935";
+          btn.textContent = "🔴 Offline — Chaturbate";
+        }
+      } catch (err) {
+        console.error("Chaturbate API error", err);
+        btn.style.background = "#999";
+        btn.textContent = "⚪ Status Unknown — Chaturbate";
+      }
+    })();
+  </script>
 </body>
 </html>
