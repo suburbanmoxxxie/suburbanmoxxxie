@@ -6,7 +6,7 @@
   <title>Suburban Moxie | 18+</title>
 
   <!-- Plausible Analytics -->
-  <script defer data-domain="suburbanmoxxxie.com" src="https://plausible.io/js/script.js"></script>
+  <script defer data-domain="suburbanmoxxxie.com/home" src="https://plausible.io/js/script.js"></script>
 
   <!-- UTM Propagation + Tracking -->
   <script>
@@ -24,14 +24,14 @@
         const out = {}; PARAM_KEYS.forEach(k => { if (p.get(k)) out[k] = p.get(k); });
         return out;
       }
-      function inferDefaults(){ return { utm_source:'direct', utm_medium:'site', utm_campaign:'default' }; }
+      function inferDefaults(){ return { utm_source:'direct', utm_medium:'site', utm_campaign:'home' }; }
       function resolveParams(){
         const cache = readCache(), incoming = getParamsFromUrl();
         let use = {};
         if (Object.keys(incoming).length){ use = { ...cache.params, ...incoming }; writeCache({ params: use, ts: now() }); }
         else if (cache.params && cache.ts && days(now() - cache.ts) <= DAYS_TO_KEEP){ use = cache.params; }
         else { use = inferDefaults(); }
-        use.utm_source ||= 'direct'; use.utm_medium ||= 'site'; use.utm_campaign ||= 'default'; return use;
+        use.utm_source ||= 'direct'; use.utm_medium ||= 'site'; use.utm_campaign ||= 'home'; return use;
       }
       function withParams(url, params){
         const u = new URL(url, location.origin);
@@ -118,11 +118,11 @@
     <!-- Tier 1 -->
     <div class="card">
       <a class="btn primary" data-name="OnlyFans" data-propagate="true" data-confirm="true"
-         href="https://onlyfans.com/suburbanmoxxxie?utm_source=suburbanmoxxxiehome&utm_medium=button&utm_campaign=launch">💙 OnlyFans — Subscribe</a>
+         href="https://onlyfans.com/suburbanmoxxxie">💙 OnlyFans — Subscribe</a>
       <a class="btn live" data-name="Chaturbate" data-propagate="true" data-confirm="true"
-         href="https://chaturbate.com/suburbanmoxxxie?utm_source=suburbanmoxxxiehome&utm_medium=button&utm_campaign=launch">🔴 I’m Live on Chaturbate</a>
+         href="https://chaturbate.com/suburbanmoxxxie">🔴 I’m Live on Chaturbate</a>
       <a class="btn" data-name="ManyVids" data-propagate="true" data-confirm="true"
-         href="https://suburbanmoxxxie.manyvids.com?utm_source=suburbanmoxxxiehome&utm_medium=button&utm_campaign=launch">🛒 ManyVids — Clips</a>
+         href="https://suburbanmoxxxie.manyvids.com">🛒 ManyVids — Clips</a>
     </div>
 
     <!-- Email -->
@@ -134,20 +134,11 @@
     <!-- Tier 2 -->
     <div class="card">
       <a class="btn" data-name="Pornhub" data-propagate="true" data-confirm="true"
-         href="https://www.pornhub.com/model/suburban-moxxxie?utm_source=suburbanmoxxxiehome&utm_medium=button&utm_campaign=launch">🔒 Free Samples — Pornhub<span class="lock"> (explicit)</span></a>
+         href="https://www.pornhub.com/model/suburban-moxxxie">🔒 Free Samples — Pornhub<span class="lock"> (explicit)</span></a>
       <a class="btn" data-name="RedGIFs" data-propagate="true" data-confirm="true"
-         href="https://www.redgifs.com/users/suburbanmoxxxie?utm_source=suburbanmoxxxiehome&utm_medium=button&utm_campaign=launch">🔒 Loops — RedGIFs<span class="lock"> (explicit)</span></a>
+         href="https://www.redgifs.com/users/suburbanmoxxxie">🔒 Loops — RedGIFs<span class="lock"> (explicit)</span></a>
       <a class="btn" data-name="Fancentro" data-propagate="true" data-confirm="true"
-         href="https://fancentro.com/suburban-moxxxie?utm_source=suburbanmoxxxiehome&utm_medium=button&utm_campaign=launch">🔒 Fancentro<span class="lock"> (explicit)</span></a>
-    </div>
-
-    <!-- Debug/Test -->
-    <div class="card">
-      <h2 style="margin:0 0 8px">🔧 Debug/Test Link</h2>
-      <a class="btn" data-name="TestLink" data-propagate="true" href="https://example.com">
-        Test Tracking (should append utm_source=twitter_test)
-      </a>
-      <p class="disclaimer">Open your Plausible dashboard → Events → look for "Outbound Link" with props.</p>
+         href="https://fancentro.com/suburban-moxxxie">🔒 Fancentro<span class="lock"> (explicit)</span></a>
     </div>
 
     <!-- Footer -->
