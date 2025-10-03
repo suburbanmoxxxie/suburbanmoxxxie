@@ -45,7 +45,6 @@
       document.addEventListener('DOMContentLoaded', () => {
         const params = resolveParams();
 
-        // Wire outbound links
         document.querySelectorAll('a[data-propagate="true"]').forEach(a => {
           a.href = withParams(a.href, params);
 
@@ -62,7 +61,7 @@
 
           if (a.dataset.confirm === 'true') {
             a.addEventListener('click', (e) => {
-              if (e.metaKey || e.ctrlKey || e.button === 1) return; // allow new-tab
+              if (e.metaKey || e.ctrlKey || e.button === 1) return;
               e.preventDefault();
               pendingHref = a.href;
               showModal();
@@ -72,11 +71,9 @@
             a.addEventListener('click', () => track('direct'));
           }
 
-          // Safety rel attributes
           a.setAttribute('rel','nofollow noopener external');
         });
 
-        // Modal controls
         const goBtn = document.getElementById('confirm-go');
         const cancelBtn = document.getElementById('confirm-cancel');
         const backdrop = document.getElementById('modal-backdrop');
@@ -120,17 +117,15 @@
       cursor:pointer; transition: opacity .2s ease;
     }
     .btn.primary { background:#4b7bf5; border-color:#4b7bf5 }
-    /* Live button color is controlled by JS (no default background here) */
+    .btn.live { background:#f4511e; border-color:#f4511e } /* always orange */
     .btn.live:hover { opacity: 0.9; }
     .lock { font-size:12px; opacity:.7; margin-left:6px }
-    .disclaimer { font-size:12px; opacity:.75; margin-top:6px }
     .footer { opacity:.6;font-size:12px;text-align:center;margin:24px 0 }
     .footer a { color:#aaa; text-decoration:none; margin:0 6px; }
     .profile-pic {
       width:120px; height:120px; border-radius:50%; object-fit:cover;
       border:2px solid #3a3a40; margin-bottom:12px;
     }
-    /* Modal */
     .modal-backdrop {
       position: fixed; inset: 0; background: rgba(0,0,0,.6);
       display: none; align-items: center; justify-content: center; z-index: 50;
@@ -170,11 +165,9 @@
       <a class="btn primary" data-name="OnlyFans" data-propagate="true" data-confirm="true"
          href="https://onlyfans.com/suburbanmoxxxie">💙 OnlyFans — Subscribe</a>
 
-      <!-- Live button status will be set by JS -->
+      <!-- Chaturbate button (always orange) -->
       <a class="btn live" data-name="Chaturbate" data-propagate="true" data-confirm="true"
-         href="https://chaturbate.com/suburbanmoxxxie">
-         Checking status…
-      </a>
+         href="https://chaturbate.com/suburbanmoxxxie">🟠 Chaturbate</a>
 
       <a class="btn" data-name="ManyVids" data-propagate="true" data-confirm="true"
          href="https://suburbanmoxxxie.manyvids.com">🛒 ManyVids — Clips</a>
@@ -217,33 +210,5 @@
       </div>
     </div>
   </div>
-
-  <!-- Chaturbate live/offline status -->
-  <script>
-    (async function() {
-      const btn = document.querySelector('.btn.live');
-      if (!btn) return;
-
-      try {
-        const res = await fetch('https://chaturbate.com/api/chatvideoinfo/?username=suburbanmoxxxie');
-        if (!res.ok) throw new Error("Network error");
-        const data = await res.json();
-
-        if (data.broadcaster_is_live) {
-          // Online / Live → GREEN
-          btn.style.background = "#26a269";
-          btn.textContent = "🟢 Online — Chaturbate";
-        } else {
-          // Offline → RED
-          btn.style.background = "#e53935";
-          btn.textContent = "🔴 Offline — Chaturbate";
-        }
-      } catch (err) {
-        console.error("Chaturbate API error", err);
-        btn.style.background = "#999";
-        btn.textContent = "⚪ Status Unknown — Chaturbate";
-      }
-    })();
-  </script>
 </body>
 </html>
