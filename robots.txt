@@ -1,0 +1,6 @@
+# ADDED: keep adult link hub & policy pages out of indexes
+User-agent: *
+Disallow: /home
+Disallow: /privacy
+Disallow: /terms
+Disallow: /safety
