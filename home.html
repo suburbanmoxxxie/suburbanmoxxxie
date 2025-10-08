@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Suburban Moxie | 18+</title>
 
+  <!-- ADDED: keep link hub out of search results -->
+  <meta name="robots" content="noindex, nofollow">
+  <!-- ADDED: prefer HTTPS assets -->
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
   <!-- Plausible Analytics -->
   <!-- Privacy-friendly analytics by Plausible -->
   <script async src="https://plausible.io/js/pa-f7SfKs0FgO-10HJslie1n.js"></script>
@@ -215,5 +220,35 @@
       </div>
     </div>
   </div>
+
+  <!-- ADDED: auto-harden external links without editing each one -->
+<script>
+  (function () {
+    try {
+      var links = document.querySelectorAll('a[href]');
+      var host = location.hostname.replace(/^www\./,'');
+      links.forEach(function (a) {
+        var url;
+        try { url = new URL(a.href, location.origin); } catch(e) { return; }
+        var isExternal = url.hostname.replace(/^www\./,'') !== host && /^https?:$/.test(url.protocol);
+        if (isExternal) {
+          if (!a.hasAttribute('target')) a.setAttribute('target', '_blank');
+          var rel = (a.getAttribute('rel') || '').split(/\s+/);
+          ['noopener','noreferrer','nofollow'].forEach(function (t) { if (rel.indexOf(t) === -1) rel.push(t); });
+          a.setAttribute('rel', rel.filter(Boolean).join(' '));
+        }
+      });
+    } catch (e) {}
+  })();
+</script>
+
+<!-- ADDED: compliance/footer disclaimer -->
+<footer style="margin: 32px 0; font-size: 0.9rem; opacity: 0.85;">
+  <p>Adults 18+ only. Links below may lead to explicit content on third-party platforms
+     that have their own terms and policies. Proceed at your discretion.</p>
+  <nav>
+    <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a> · <a href="/safety">Safety</a>
+  </nav>
+</footer>
 </body>
 </html>
